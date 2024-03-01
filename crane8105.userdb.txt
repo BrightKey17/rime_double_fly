@@ -1,0 +1,6 @@
+# Rime user dictionary
+#@/db_name	crane8105
+#@/db_type	userdb
+#@/rime_version	1.8.5
+#@/tick	0
+#@/user_id	0e43ecc3-eb55-4715-898b-5de951370e20

@@ -1,0 +1,174 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: crane_double_fly
+  name: 定制双飞🍑
+  version: "2023.07.07"
+  author:
+    - Brightkey <brightzone@qq.com>
+  description: |
+    - 超强特性
+    - 可选四键自动上屏?
+  dependencies:
+    - luna_pinyin
+    - stroke
+
+switches:
+  #  - name: full_shape
+  #    reset: 0
+  #    states: [ 半 ,全 ]
+  #  - options: ["utf8", "gbk", "gb2312"] # 字符集选单
+  #    reset: 0 # 默认 UTF8
+  #    states:
+  #      - UTF-8
+  #      - GBK
+  #      - GB2312
+
+engine:                    # 輸入引擎設定，即掛接組件的「處方」
+  processors:              # 一、這批組件處理各類按鍵消息
+    - ascii_composer       # ※ 處理西文模式及中西文切換
+    - recognizer           # ※ 與 matcher 搭配，處理符合特定規則的輸入碼，如網址、反查等
+    - key_binder           # ※ 在特定條件下將按鍵綁定到其他按鍵，如重定義逗號、句號爲候選翻頁鍵
+    - speller              # ※ 拼寫處理器，接受字符按鍵，編輯輸入碼
+    - punctuator           # ※ 句讀處理器，將單個字符按鍵直接映射爲文字符號
+    - selector             # ※ 選字處理器，處理數字選字鍵、上、下候選定位、換頁鍵
+    - navigator            # ※ 處理輸入欄內的光標移動鍵
+    - express_editor       # ※ 編輯器，處理空格、回車上屏、回退鍵等
+      #- fluid_editor         # ※ 句式編輯器，用於以空格斷詞、回車上屏的【注音】、【語句流】等輸入方案，
+                           #   替換 express_editor，也可以寫作 fluency_editor
+  segmentors:              # 二、這批組件識別不同內容類型，將輸入碼分段
+    - ascii_segmentor      # ※ 標識西文段落
+    - matcher              # ※ 標識符合特定規則的段落，如網址、反查等
+    - abc_segmentor        # ※ 標識常規的文字段落
+    - affix_segmentor@luna_lookup
+    - affix_segmentor@stroke_lookup
+    - affix_segmentor@reverse_lookup
+    - punct_segmentor      # ※ 標識句讀段落,加上tag:punct
+    - fallback_segmentor   # ※ 標識其他未標識段落
+  translators:             # 三、這批組件翻譯特定類型的編碼段爲一組候選文字
+    - table_translator     # ※ 碼表翻譯器，用於倉頡、五筆等基於碼表的輸入方案，替換 script_translator
+    - reverse_lookup_translator  # ※ 反查翻譯器，用另一種編碼方案查碼
+    - script_translator@luna_lookup
+    - script_translator@luna_reserve_lookup
+    - table_translator@stroke_lookup
+    - table_translator@stroke_reverse_lookup
+    - lua_translator@date_translator
+    - lua_translator@time_translator
+    - punct_translator     # ※ 轉換標點符號
+  filters:                 # 四、這批組件過濾翻譯的結果
+    - simplifier           # ※ 繁簡轉換
+    - uniquifier           # ※ 過濾重複的候選字，有可能來自繁簡轉換
+    # - reverse_lookup_filter@luna_reverse_lookup
+    # - reverse_lookup_filter@stroke_reverse_lookup
+    
+speller:
+  alphabet: 'zyxwvutsrqponmlkjihgfedcba*#'
+  #initials: ';'
+  #finals: '#'
+  delimiter: " '"
+  max_code_length: 4
+  auto_select: true #顶字上屏
+  auto_select_pattern: ^\w{4}$
+  auto_select_unique_candidate: true
+  auto_clear: max_length
+  algebra:
+    - erase/^az$/
+    - derive/^([jqxy])u(.*)$/$1v$2/
+    - derive/^(\w\w)\w(\w).?$/$1*$2/ 
+    - derive/^(\w\w)\w(\w).?$/$1#$2/ 
+    - xform/^(.{4})[-*]$/$1/ #transformation 
+    - abbrev/^(\w\w).?$/$1/
+    - xlit/QWRTYUIOPSDFGHJKLZXCVBNM/qwrtyuiopsdfghjklzxcvbnm/ #transliteration转写
+    # 双拼音节切分。如果不设置只能严格按照码表输出
+    # 如果不该项，输入「xl」将不会出现「项」
+    - fuzz/^(\w\w)(\w\w).?$/$1/
+    #- fuzz/^(\w\w)(\w)\w.+/$1$2/
+
+translator:
+  dictionary: &crane crane8105
+  prism: crane8105
+  spelling_hints: 5  
+  enable_completion: true # 编码提示开关
+  enable_charset_filter: false
+  enable_user_dict: true
+# 不想自動調頻的話，將上條中「true」改爲「false」
+  enable_sentence: false
+  sentence_over_completion: false
+  enable_encoder: false
+# 不想自動組詞〔記錄輸入過的詞，然後變成五碼固定詞〕的話可以把上條中「true」改爲「false」
+  encode_commit_history: true
+  preedit_format:
+    - xform/([jqxy])v.*/$1u.*/
+
+reverse_lookup:
+  tag: reverse_lookup
+  prefix: "`"
+  suffix: "'"
+  tips: 反查reverse_lookup
+  overwrite_comment: false  # 覆蓋其他提示
+  comment_format: 
+    - xform/^/🧬/
+    - xform/$//
+  extra_tags:
+    - luna_lookup
+    - stroke_lookup
+
+luna_lookup:
+  tag: luna_lookup
+  dictionary: luna_pinyin
+  prefix: "L" # 獨用漢語〔大寫〕「L」
+  suffix: "'"
+  enable_completion: true
+  overwrite_comment: false  # 覆蓋其他提示
+  tips: 明月Lunar
+  closing_tips: 明月Lunar
+  initial_quality: 1	# 調整該編譯器出字優先度
+  comment_format: 
+    - xform/^/^/
+    - xform/$/$/
+
+luna_reverse_lookup:
+  tags: [ luna_lookup ]
+  dictionary: *crane
+  enable_completion: true
+  overwrite_comment: false  # 覆蓋其他提示
+  comment_format: 
+    - xform/^/^/
+    - xform/$/$/
+
+stroke_lookup:
+  tag: stroke_lookup
+  dictionary: stroke
+  enable_completion: true
+  prefix: "S"
+  suffix: "'"
+  tips: 笔画stroke
+  overwrite_comment: false  # 覆蓋其他提示
+  preedit_format:
+    - xlit/hspnz/一丨丿丶乙/
+  comment_format:
+    - xform/([nl])v/$1ü/
+
+stroke_reverse_lookup:
+  tags: [ stroke_lookup ]
+  dictionary: crane8105
+  overwrite_comment: false  # 覆蓋其他提示
+  comment_format: 
+    - xform/^/^/
+    - xform/$/$/
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*'?$"
+    stroke_lookup: "S[a-z]*'?$"
+    luna_lookup: "L[a-z]*'?$"
+    punct:  "^(\/[a-zA-Z]+|\/[0-9]|[^0-9a-zA-Z]$)"
+

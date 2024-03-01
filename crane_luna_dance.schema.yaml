@@ -1,0 +1,150 @@
+# Rime schema
+# encoding: utf-8
+
+schema:
+  schema_id: crane_luna_dance
+  name: 月光鹤舞🦉
+  author:
+    - 基于double_pinyin_flypy
+    - Rime schema by 佛振 <chen.sst@gmail.com>
+    - Brightkey@CodeFanatic brightzone@qq.com
+  description: 
+    朙月拼音＋小鶴雙拼方案 + 小鹤音形反查
+  dependencies:
+    - crane8105
+    # - stroke
+
+engine:
+  processors:
+    - ascii_composer
+    - recognizer
+    - key_binder
+    - speller
+    - punctuator
+    - selector
+    - navigator
+    - express_editor
+  segmentors:
+    - ascii_segmentor
+    - matcher
+    - abc_segmentor
+    - punct_segmentor
+    - fallback_segmentor
+  translators:
+    - script_translator
+    - reverse_lookup_translator
+    - table_translator@crane_lookup
+    # - table_translator@stroke_lookup
+    - table_translator@custom_phrase
+    - lua_translator@date_translator
+    - lua_translator@time_translator
+    - punct_translator
+  filters:
+    - simplifier
+    - uniquifier
+
+speller:
+  alphabet: zyxwvutsrqponmlkjihgfedcba
+  delimiter: " '"
+  algebra:
+    - erase/^xx$/
+    - derive/^([jqxy])u$/$1v/
+    - derive/^([aoe])([ioun])$/$1$1$2/
+    - xform/^([aoe])(ng)?$/$1$1$2/
+    - xform/iu$/Q/
+    - xform/(.)ei$/$1W/
+    - xform/uan$/R/
+    - xform/[uv]e$/T/
+    - xform/un$/Y/
+    - xform/^sh/U/
+    - xform/^ch/I/
+    - xform/^zh/V/
+    - xform/uo$/O/
+    - xform/ie$/P/
+    - xform/i?ong$/S/
+    - xform/ing$|uai$/K/
+    - xform/(.)ai$/$1D/
+    - xform/(.)en$/$1F/
+    - xform/(.)eng$/$1G/
+    - xform/[iu]ang$/L/
+    - xform/(.)ang$/$1H/
+    - xform/ian$/M/
+    - xform/(.)an$/$1J/
+    - xform/(.)ou$/$1Z/
+    - xform/[iu]a$/X/
+    - xform/iao$/N/
+    - xform/(.)ao$/$1C/
+    - xform/ui$/V/
+    - xform/in$/B/
+    - xlit/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/
+    # - abbrev/^(.).+$/$1/
+
+translator:
+  dictionary: luna_pinyin
+  prism: double_pinyin_flypy
+  spelling_hints: 0  
+  enable_completion: false # 编码提示开关
+  enable_charset_filter: false
+  enable_sentence: true
+  sentence_over_completion: false
+  enable_user_dict: true
+# 不想自動調頻的話，將上條中「true」改爲「false」
+  enable_encoder: true
+# 不想自動組詞〔記錄輸入過的詞，然後變成五碼固定詞〕的話可以把上條中「true」改爲「false」
+  encode_commit_history: true
+  initial_quality: 0.1	# 調整該編譯器出字優先度
+
+crane_lookup:
+  tag: crane_lookup
+  dictionary: &crane crane8105
+  prism: crane8105
+  enable_completion: true
+  preedit_format: 
+    - xform/([jqxyln])v/$1u/
+  comment_format: 
+    - xform/^/🛰️/
+    - xform/$//
+  tips: 小鹤音形
+  closing_tips: 😈️
+  initial_quality: 0.99	# 調整該編譯器出字優先度
+
+reverse_lookup:
+  tag: reverse_lookup
+  dictionary: stroke
+  enable_completion: true
+  prefix: "`"
+  suffix: "'"
+  tips: 笔画反查↔reverse-lookup
+  closing_tips: extraordinary
+  preedit_format:
+    - xlit/hspnz/一丨丿丶乙/
+  comment_format: 
+    - xform/([nl])v/$1ü/
+    - xform/^/🧬/
+    - xform/$//
+
+# using extra translator by segmentor tags
+abc_segmentor:
+  extra_tags:
+    - crane_lookup
+
+punctuator:
+  import_preset: default
+
+key_binder:
+  import_preset: default
+
+custom_phrase:
+  dictionary: ""
+  user_dict: history
+  db_class: stabledb
+  enable_completion: true
+  enable_sentence: true
+  initial_quality: 1
+
+recognizer:
+  import_preset: default
+  patterns:
+    reverse_lookup: "`[a-z]*'?$"
+    punct:  "^(\/[a-zA-Z]+|\/[0-9]|[^0-9a-zA-Z]$)"
+

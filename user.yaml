@@ -1,0 +1,25 @@
+var:
+  last_build_time: 1709171331
+  option:
+    ascii_mode: false
+    ascii_punct: true
+    full_shape: false
+    simplification: true
+  previously_selected_schema: crane_luna_dance
+  schema_access_time:
+    advance_double_fly: 1690277399
+    awesome_double_fly: 1690272400
+    cangjie6: 1690247322
+    crane_double_fly: 1693471084
+    crane_luna_dance: 1693531483
+    double_fly_express: 1653383882
+    double_flypy: 1658722259
+    double_pinyin_flypy: 1690277441
+    easy_en: 1657858786
+    easy_number: 1657858636
+    fly_express: 1653382953
+    fly_yinxing: 1658714962
+    flypy: 1689927446
+    flypy_double: 1658736205
+    luna_pinyin: 1690253252
+    numbers: 1657855268

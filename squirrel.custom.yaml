@@ -1,0 +1,56 @@
+patch:
+  show_notifications_when: appropriate     # 状态通知，可设为全开（always）全关（never）
+
+# 特定App默认中/英文输入
+  app_options:
+    com.apple.finder:
+      ascii_mode: true
+    com.apple.Spotlight:             # 聚焦搜索
+      ascii_mode: true             # true默认英文,false默认中文
+    com.runningwithcrayons.Alfred:   # alfred
+      ascii_mode: true
+    com.apple.Terminal:
+      ascii_mode: true
+      no_inline: true
+    com.microsoft.VSCode:            # Visual Studio Code
+      ascii_mode: true
+      ascii_punct: true            # 中文状态输出英文标点(半角)
+    com.tencent.Lemon:               # 腾讯柠檬
+    Xcode:              # Xcode
+      ascii_mode: true
+    com.nektony.App-Cleaner-SII:     # App Cleaner & Uninstaller
+      ascii_mode: true
+    com.alfredapp.Alfred:
+      ascii_mode: true
+    com.runningwithcrayons.Alfred-2:
+      ascii_mode: true
+    com.blacktree.Quicksilver:
+      ascii_mode: true
+    com.googlecode.iterm2:
+      ascii_mode: true
+      no_inline: true
+    org.vim.MacVim:
+      ascii_mode: true  # 初始爲西文模式
+      no_inline: true   # 不使用行內編輯
+      vim_mode: true    # 退出VIM插入模式自動切換輸入法狀態
+    com.apple.dt.Xcode:
+      ascii_mode: true
+    com.barebones.textwrangler:
+      ascii_mode: true
+    com.macromates.TextMate.preview:
+      ascii_mode: true
+    com.github.atom:
+      ascii_mode: true
+    org.gnu.Aquamacs:
+      ascii_mode: true
+    org.gnu.Emacs:
+      ascii_mode: true
+      no_inline: true
+    co.zeit.hyper:
+      ascii_mode: true
+    com.google.Chrome:
+      # 規避 https://github.com/rime/squirrel/issues/435
+      inline: true
+    ru.keepcoder.Telegram:
+      # 規避 https://github.com/rime/squirrel/issues/475
+      inline: true
