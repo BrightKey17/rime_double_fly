@@ -15,15 +15,15 @@ schema:
     - stroke
 
 switches:
-  #  - name: full_shape
-  #    reset: 0
-  #    states: [ 半 ,全 ]
-  #  - options: ["utf8", "gbk", "gb2312"] # 字符集选单
-  #    reset: 0 # 默认 UTF8
-  #    states:
-  #      - UTF-8
-  #      - GBK
-  #      - GB2312
+    - name: full_shape
+      reset: 0
+      states: [ 半 ,全 ]
+    - options: ["utf8", "gbk", "gb2312"] # 字符集选单
+      reset: 0 # 默认 UTF8
+      states:
+        - UTF-8
+        - GBK
+        - GB2312
 
 engine:                    # 輸入引擎設定，即掛接組件的「處方」
   processors:              # 一、這批組件處理各類按鍵消息
