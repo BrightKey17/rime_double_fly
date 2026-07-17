@@ -14,6 +14,19 @@ schema:
     - crane8105
     # - stroke
 
+switches:
+    - name: simplification
+      reset: 1
+      states: ["漢字","simplification"]
+    - name: full_shape
+      reset: 0
+      states: [ 半 ,全 ]
+    - options: ["utf8", "gbk", "gb2312"] # 字符集选单
+      reset: 0 # 默认 UTF8
+      states:
+        - UTF-8
+        - GBK
+        - GB2312
 engine:
   processors:
     - ascii_composer

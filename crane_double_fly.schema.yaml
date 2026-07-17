@@ -15,6 +15,9 @@ schema:
     - stroke
 
 switches:
+    - name: simplification
+      reset: 1
+      states: ["漢字","simplification"]
     - name: full_shape
       reset: 0
       states: [ 半 ,全 ]
